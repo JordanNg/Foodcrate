@@ -27,7 +27,7 @@
             android:layout_width="72dp"
             android:layout_height="72dp"
             android:layout_gravity="top|center_horizontal"
-            android:layout_marginTop="100dp"
+            android:layout_marginTop="140dp"
             android:visibility="invisible">
         </ProgressBar>
     </LinearLayout>

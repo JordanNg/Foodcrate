@@ -1,5 +1,6 @@
 package com.example.foodcrate;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -127,7 +128,10 @@ public class MainActivity extends AppCompatActivity {
                 yelpItems = YelpUtils.parseYelpQueryResults(s);
             }
 
-            mResponseTV.setText(yelpItems.get(0).name);
+            //mResponseTV.setText(yelpItems.get(0).price);
+            Intent crateActivityIntent = new Intent(MainActivity.this, CrateActivity.class);
+            crateActivityIntent.putExtra(CrateActivity.EXTRA_YELP_ITEM, yelpItems.get(0));
+            startActivity(crateActivityIntent);
         }
     }
 }

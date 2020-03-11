@@ -14,9 +14,11 @@ public class YelpUtils {
     private final static String TERM = "term";
     private final static String PRICE = "price";
     private final static String LAT_PARAM = "latitude";
-    final static String LAT = "37.786882";
+    //final static String LAT = "37.786882";
+    final static String LAT = "21.3069";
     private final static String LON_PARAM = "longitude";
-    final static String LON = "-122.399972";
+    //final static String LON = "-122.399972";
+    final static String LON = "-157.8583";
 
     private final static String LIMIT = "limit";
     private final static String NUMBER_OF_OBJECTS = "10";
