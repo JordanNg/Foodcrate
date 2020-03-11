@@ -40,7 +40,7 @@
         <EditText
             android:id="@+id/et_keyword_search"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="60dp"
             android:padding="8dp"
             android:hint="Enter a keyword"/>
 
@@ -50,7 +50,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="top|center_horizontal"
             android:padding="8dp"
-            android:text="YELP ME"/>
+            android:text="Deliver Crate"/>
 
         <TextView
             android:id="@+id/tv_yelp_response"

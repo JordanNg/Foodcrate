@@ -10,6 +10,7 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.example.foodcrate.data.YelpItem;
 import com.example.foodcrate.utils.NetworkUtils;
 import com.example.foodcrate.utils.YelpUtils;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -25,6 +26,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -119,7 +122,12 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
             mLoadingIndicatorPB.setVisibility(View.INVISIBLE);
-            mResponseTV.setText(s);
+            List<YelpItem> yelpItems = null;
+            if (s != null) {
+                yelpItems = YelpUtils.parseYelpQueryResults(s);
+            }
+
+            mResponseTV.setText(yelpItems.get(0).name);
         }
     }
 }
