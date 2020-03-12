@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 public class YelpItem implements Serializable {
     public String name;
+    public String id;
     public int reviewCount;
     public boolean isClosed;
     public float rating;

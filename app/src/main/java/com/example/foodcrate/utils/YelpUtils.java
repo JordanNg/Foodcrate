@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.example.foodcrate.MainActivity;
 import com.example.foodcrate.data.YelpItem;
 import com.google.gson.Gson;
 
@@ -15,13 +16,14 @@ import java.util.ArrayList;
 
 public class YelpUtils {
     private final static String BASE_URL = "https://api.yelp.com/v3/businesses/search?";
+    private final static String REVIEW_URL = "https://api.yelp.com/v3/businesses/";
+    private String BUSINESS_ID;
     //private final static String API_KEY = "n6jgTLaklmxY6pP38tHCYVfh7uzsuPyaDbCVxov_l0XALUFvv9rogrGCCYKD05m0UqFyQ1g1xuchvW--qNKk-mK_FHDOIAVwEYJkFiFTBwxDho8UvvbXM9CTNwFoXnYx";
     private final static String TERM = "term";
     private final static String PRICE = "price";
     private final static String LAT_PARAM = "latitude";
-    static String LAT = "21.3069";
     private final static String LON_PARAM = "longitude";
-    static String LON = "-157.8583";
+    private final static String OPEN_NOW = "open_now";
 
     private final static String LIMIT = "limit";
     private final static String NUMBER_OF_OBJECTS = "50";
@@ -75,6 +77,14 @@ public class YelpUtils {
                 .toString();
     }
 
+    public static String buildYelpReviewQuery(String id) {
+
+        return Uri.parse(REVIEW_URL).buildUpon()
+                .appendPath(id)
+                .build()
+                .toString();
+    }
+
     public static ArrayList<YelpItem> parseYelpQueryResults(String yelpJSON) {
         Gson gson = new Gson();
         YelpQueryResults results = gson.fromJson(yelpJSON, YelpQueryResults.class);
@@ -89,6 +99,7 @@ public class YelpUtils {
                 YelpItem yelpItem = new YelpItem();
 
                 yelpItem.name = listItem.name;
+                yelpItem.id = listItem.id;
                 yelpItem.reviewCount = listItem.review_count;
                 yelpItem.price = listItem.price;
                 yelpItem.rating = listItem.rating;

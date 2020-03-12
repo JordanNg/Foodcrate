@@ -8,6 +8,7 @@ import android.os.Bundle;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.foodcrate.data.YelpItem;
+import com.example.foodcrate.utils.YelpUtils;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -77,7 +78,6 @@ public class CrateActivity extends AppCompatActivity {
 
             /* Switch statement for all of the possible ratings */
             int rating2x = (int) (business.rating * 2);
-            Log.d("Tag", Integer.toString(rating2x));
             switch (rating2x) {
                 case 1:
                     mOnehStar.setVisibility(View.VISIBLE);
@@ -139,12 +139,26 @@ public class CrateActivity extends AppCompatActivity {
                     .into(mPhotoIV);
         }
 
-            FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
+
+                Intent intent = getIntent();
+                YelpItem business = (YelpItem) intent.getSerializableExtra(EXTRA_YELP_ITEM);
+                String message = "Food Crate dropped us " + business.name + "\n"
+                            + "It has a rating of " + business.rating + " stars!\n"
+                            + "Here is a link if you want to check it out:\n\n" + business.url;
+
+
+                Intent shareIntent = new Intent(Intent.ACTION_SEND);
+                shareIntent.putExtra(Intent.EXTRA_TEXT, message);
+                shareIntent.setType("text/plain");
+
+                Intent chooserIntent = Intent.createChooser(shareIntent, null);
+                startActivity(chooserIntent);
             }
         });
     }

@@ -30,7 +30,9 @@
                     android:id="@+id/tv_crate_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/text_margin"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginTop="24dp"
+                    android:layout_marginBottom="8dp"
                     android:textSize="24dp"
                     android:text="Name:" />
 
@@ -127,8 +129,9 @@
                     android:id="@+id/tv_crate_price"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/text_margin"
                     android:textColor="@color/colorPrimary"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginTop="8dp"
                     android:textSize="20dp"
                     android:text="Price:" />
             </LinearLayout>
@@ -138,13 +141,15 @@
             android:id="@+id/tv_crate_isOpen"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/text_margin"
+            android:layout_marginTop="16dp"
+            android:layout_marginLeft="16dp"
             android:text="Open Now:" />
         <TextView
             android:id="@+id/tv_crate_phone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/text_margin"
+            android:layout_marginTop="16dp"
+            android:layout_marginLeft="16dp"
             android:text="Phone:" />
 
     </LinearLayout>

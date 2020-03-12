@@ -45,11 +45,13 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     private TextView mResponseTV;
     private EditText mSearchTV;
     private ProgressBar mLoadingIndicatorPB;
+    private Button mButton;
 
     private AppBarConfiguration mAppBarConfiguration;
 
     private String lat;
     private String lon;
+    private String mBusinessId;
     private static final int REQUEST_LOCATION = 123;
     private LocationManager locationManager;
     private LocationListener locationListener;
@@ -80,7 +82,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
-        Button button = findViewById(R.id.button_query);
+        mButton = findViewById(R.id.button_query);
         mLoadingIndicatorPB = findViewById(R.id.pb_loading_indicator);
         mResponseTV = findViewById(R.id.tv_yelp_response);
 
@@ -101,14 +103,21 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
 
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
 
-        button.setOnClickListener(new View.OnClickListener() {
+        mButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mButton.setVisibility(View.INVISIBLE);
                 mSearchTV = findViewById(R.id.et_keyword_search);
                 String sample = String.valueOf(mSearchTV.getText());
                 executeYelpQuery(sample, lon, lat);
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mButton.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -184,7 +193,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
             // Get a random item from our list
             int rand = (int) ((Math.random() * ((50 - 0) + 1)) + 0);
 
-            //mResponseTV.setText(yelpItems.get(0).price);
+            mBusinessId = yelpItems.get(rand).id;
             Intent crateActivityIntent = new Intent(MainActivity.this, CrateActivity.class);
             crateActivityIntent.putExtra(CrateActivity.EXTRA_YELP_ITEM, yelpItems.get(rand));
             startActivity(crateActivityIntent);
