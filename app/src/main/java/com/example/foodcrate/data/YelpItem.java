@@ -8,6 +8,7 @@ public class YelpItem implements Serializable {
     public boolean isClosed;
     public float rating;
     public String price;
+    public String imageUrl;
     public String url;
 
     public String phone;

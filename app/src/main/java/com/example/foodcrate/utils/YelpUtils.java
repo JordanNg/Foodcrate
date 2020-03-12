@@ -89,6 +89,8 @@ public class YelpUtils {
                 yelpItem.price = listItem.price;
                 yelpItem.rating = listItem.rating;
                 yelpItem.isClosed = listItem.is_closed;
+
+                yelpItem.imageUrl = listItem.image_url;
                 yelpItem.url = listItem.url;
 
                 yelpItem.phone = listItem.phone;
