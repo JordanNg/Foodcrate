@@ -19,6 +19,7 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.example.foodcrate.data.Status;
 import com.example.foodcrate.data.YelpItem;
 import com.example.foodcrate.utils.NetworkUtils;
 import com.example.foodcrate.utils.YelpUtils;
@@ -27,6 +28,8 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
 
 import androidx.core.app.ActivityCompat;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -42,12 +45,11 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity implements LocationListener {
     private static final String TAG = MainActivity.class.getSimpleName();
 
-    private TextView mResponseTV;
     private EditText mSearchTV;
     private ProgressBar mLoadingIndicatorPB;
     private Button mButton;
 
-    private AppBarConfiguration mAppBarConfiguration;
+    private YelpQueryViewModel mViewModel;
 
     private String lat;
     private String lon;
@@ -55,6 +57,10 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     private static final int REQUEST_LOCATION = 123;
     private LocationManager locationManager;
     private LocationListener locationListener;
+
+    private List<YelpItem> mYelpItems;
+
+    private AppBarConfiguration mAppBarConfiguration;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,20 +90,38 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
 
         mButton = findViewById(R.id.button_query);
         mLoadingIndicatorPB = findViewById(R.id.pb_loading_indicator);
-        mResponseTV = findViewById(R.id.tv_yelp_response);
+
+        mViewModel = new ViewModelProvider(this).get(YelpQueryViewModel.class);
+        mViewModel.getQueryResults().observe(this, new Observer<List<YelpItem>>() {
+            @Override
+            public void onChanged(List<YelpItem> yelpItems) {
+                if (yelpItems != null) {
+                    startCrateActivity(yelpItems);
+                }
+            }
+        });
+
+        mViewModel.getLoadingStatus().observe(this, new Observer<Status>() {
+            @Override
+            public void onChanged(Status status) {
+                if (status == Status.LOADING) {
+                    mLoadingIndicatorPB.setVisibility(View.VISIBLE);
+                    mButton.setVisibility(View.INVISIBLE);
+                } else if (status == Status.SUCCESS) {
+                    mLoadingIndicatorPB.setVisibility(View.INVISIBLE);
+                } else {
+                    mLoadingIndicatorPB.setVisibility(View.INVISIBLE);
+                    mButton.setVisibility(View.VISIBLE);
+                }
+            }
+        });
 
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
+            // Request the user to give me permissions to stalk their location...
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION,
                             Manifest.permission.ACCESS_COARSE_LOCATION}, REQUEST_LOCATION);
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
             return;
         }
 
@@ -141,10 +165,23 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         Log.d("Latitude","status");
     }
 
+
+
     private void executeYelpQuery(String query, String lon, String lat) {
         String url = YelpUtils.buildYelpQuery(query, lon, lat);
         Log.d(TAG, "querying search URL: " + url);
-        new YelpQueryAsyncTask().execute(url);
+        mViewModel.loadQueryResults(query, lon, lat);
+        //new YelpQueryAsyncTask().execute(url);
+    }
+
+    private void startCrateActivity(List<YelpItem> yelpItems) {
+        // Get a random item from our list
+        int max = yelpItems.size() - 1;
+        int rand = (int) ((Math.random() * ((max - 0) + 1)) + 0);
+
+        Intent crateActivityIntent = new Intent(MainActivity.this, CrateActivity.class);
+        crateActivityIntent.putExtra(CrateActivity.EXTRA_YELP_ITEM, yelpItems.get(rand));
+        startActivity(crateActivityIntent);
     }
 
     @Override
