@@ -191,9 +191,10 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
             }
 
             // Get a random item from our list
-            int rand = (int) ((Math.random() * ((50 - 0) + 1)) + 0);
+            int max = yelpItems.size() - 1;
+            int rand = (int) ((Math.random() * ((max - 0) + 1)) + 0);
 
-            mBusinessId = yelpItems.get(rand).id;
+            //mBusinessId = yelpItems.get(rand).id;
             Intent crateActivityIntent = new Intent(MainActivity.this, CrateActivity.class);
             crateActivityIntent.putExtra(CrateActivity.EXTRA_YELP_ITEM, yelpItems.get(rand));
             startActivity(crateActivityIntent);

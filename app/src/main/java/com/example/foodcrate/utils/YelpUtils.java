@@ -26,6 +26,7 @@ public class YelpUtils {
     private final static String OPEN_NOW = "open_now";
 
     private final static String LIMIT = "limit";
+    // This is the max :(
     private final static String NUMBER_OF_OBJECTS = "50";
 
 
@@ -43,6 +44,7 @@ public class YelpUtils {
         public int review_count;
         public float rating;
         public YelpQueryItemCoordinates coordinates;
+        public String[] transactions;
         public String price;
         public YelpQueryItemLocation location;
         public String phone;
@@ -110,6 +112,8 @@ public class YelpUtils {
 
                 yelpItem.phone = listItem.phone;
                 yelpItem.displayPhone = listItem.display_phone;
+
+                yelpItem.transactions = listItem.transactions;
 
                 yelpItem.longitude = listItem.coordinates.longitude;
                 yelpItem.latitude = listItem.coordinates.latitude;

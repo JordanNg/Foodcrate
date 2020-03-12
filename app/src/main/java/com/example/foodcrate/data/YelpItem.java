@@ -15,6 +15,8 @@ public class YelpItem implements Serializable {
     public String phone;
     public String displayPhone;
 
+    public String[] transactions;
+
     public float latitude;
     public float longitude;
 

@@ -25,8 +25,11 @@ public class CrateActivity extends AppCompatActivity {
     private TextView mNameTV;
     private TextView mPriceTV;
     private TextView mRatingTV;
-    private TextView isClosed;
     private TextView mPhoneTV;
+    private TextView mLocationTV;
+    private TextView mTransactionsTV;
+    private TextView mTransLabelTV;
+
     private ImageView mPhotoIV;
 
     private ImageView mOneStar;
@@ -51,9 +54,12 @@ public class CrateActivity extends AppCompatActivity {
         mNameTV = findViewById(R.id.tv_crate_name);
         mPriceTV = findViewById(R.id.tv_crate_price);
         mRatingTV = findViewById(R.id.tv_crate_rating);
-        isClosed = findViewById(R.id.tv_crate_isOpen);
         mPhoneTV = findViewById(R.id.tv_crate_phone);
         mPhotoIV = findViewById(R.id.iv_image_business);
+        mLocationTV = findViewById(R.id.tv_crate_location);
+
+        mTransLabelTV = findViewById(R.id.tv_crate_transactions);
+        mTransactionsTV = findViewById(R.id.tv_crate_transElements);
 
         /* Grab references to each of the stars */
         mOneStar = findViewById(R.id.iv_one_star);
@@ -73,8 +79,24 @@ public class CrateActivity extends AppCompatActivity {
             mNameTV.setText(business.name);
             mPriceTV.setText(business.price);
             mRatingTV.setText(Float.toString(business.rating));
-            isClosed.setText("Open Now: ".concat(Boolean.toString(!business.isClosed)));
-            mPhoneTV.setText("Phone Number: ".concat(business.displayPhone));
+
+            mPhoneTV.setText(business.displayPhone);
+            mLocationTV.setText(business.address1 + "\n"
+                    + business.city + " " + business.state + ", " + business.zipCode);
+
+            int length = business.transactions.length;
+            if (length != 0) {
+                String transactions = "";
+                transactions = transactions.concat((business.transactions[0]));
+                for (int i = 1; i < length; i++) {
+                    transactions = transactions.concat(", ");
+                    transactions = transactions.concat(business.transactions[i]);
+                }
+                mTransactionsTV.setText(transactions);
+            } else {
+                mTransactionsTV.setVisibility(View.INVISIBLE);
+                mTransLabelTV.setVisibility(View.INVISIBLE);
+            }
 
             /* Switch statement for all of the possible ratings */
             int rating2x = (int) (business.rating * 2);
