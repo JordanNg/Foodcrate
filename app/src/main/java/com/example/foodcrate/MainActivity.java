@@ -1,6 +1,14 @@
 package com.example.foodcrate;
 
+import android.Manifest;
+import android.app.Activity;
+import android.app.DownloadManager;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -18,6 +26,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
 
+import androidx.core.app.ActivityCompat;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -30,7 +39,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements LocationListener {
     private static final String TAG = MainActivity.class.getSimpleName();
 
     private TextView mResponseTV;
@@ -38,6 +47,12 @@ public class MainActivity extends AppCompatActivity {
     private ProgressBar mLoadingIndicatorPB;
 
     private AppBarConfiguration mAppBarConfiguration;
+
+    private String lat;
+    private String lon;
+    private static final int REQUEST_LOCATION = 123;
+    private LocationManager locationManager;
+    private LocationListener locationListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,18 +84,56 @@ public class MainActivity extends AppCompatActivity {
         mLoadingIndicatorPB = findViewById(R.id.pb_loading_indicator);
         mResponseTV = findViewById(R.id.tv_yelp_response);
 
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION,
+                            Manifest.permission.ACCESS_COARSE_LOCATION}, REQUEST_LOCATION);
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mSearchTV = findViewById(R.id.et_keyword_search);
                 String sample = String.valueOf(mSearchTV.getText());
-                executeYelpQuery(sample);
+                executeYelpQuery(sample, lon, lat);
             }
         });
     }
 
-    private void executeYelpQuery(String query) {
-        String url = YelpUtils.buildYelpQuery(query);
+    @Override
+    public void onLocationChanged(Location location) {
+        lat = Double.toString(location.getLatitude());
+        lon = Double.toString(location.getLongitude());
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+        Log.d("StatusChanged", Integer.toString(status));
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+        Log.d("Latitude","enable");
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+        Log.d("Latitude","status");
+    }
+
+    private void executeYelpQuery(String query, String lon, String lat) {
+        String url = YelpUtils.buildYelpQuery(query, lon, lat);
         Log.d(TAG, "querying search URL: " + url);
         new YelpQueryAsyncTask().execute(url);
     }
@@ -128,9 +181,12 @@ public class MainActivity extends AppCompatActivity {
                 yelpItems = YelpUtils.parseYelpQueryResults(s);
             }
 
+            // Get a random item from our list
+            int rand = (int) ((Math.random() * ((50 - 0) + 1)) + 0);
+
             //mResponseTV.setText(yelpItems.get(0).price);
             Intent crateActivityIntent = new Intent(MainActivity.this, CrateActivity.class);
-            crateActivityIntent.putExtra(CrateActivity.EXTRA_YELP_ITEM, yelpItems.get(0));
+            crateActivityIntent.putExtra(CrateActivity.EXTRA_YELP_ITEM, yelpItems.get(rand));
             startActivity(crateActivityIntent);
         }
     }

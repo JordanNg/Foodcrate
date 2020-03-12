@@ -1,6 +1,11 @@
 package com.example.foodcrate.utils;
 
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.net.Uri;
+import android.os.Bundle;
+import android.util.Log;
 
 import com.example.foodcrate.data.YelpItem;
 import com.google.gson.Gson;
@@ -14,14 +19,12 @@ public class YelpUtils {
     private final static String TERM = "term";
     private final static String PRICE = "price";
     private final static String LAT_PARAM = "latitude";
-    //final static String LAT = "37.786882";
-    final static String LAT = "21.3069";
+    static String LAT = "21.3069";
     private final static String LON_PARAM = "longitude";
-    //final static String LON = "-122.399972";
-    final static String LON = "-157.8583";
+    static String LON = "-157.8583";
 
     private final static String LIMIT = "limit";
-    private final static String NUMBER_OF_OBJECTS = "10";
+    private final static String NUMBER_OF_OBJECTS = "50";
 
 
     static class YelpQueryResults {
@@ -61,11 +64,12 @@ public class YelpUtils {
     }
 
 
-    public static String buildYelpQuery(String term) {
+    public static String buildYelpQuery(String term, String lon, String lat) {
+
         return Uri.parse(BASE_URL).buildUpon()
                 .appendQueryParameter(TERM, term)
-                .appendQueryParameter(LAT_PARAM, LAT)
-                .appendQueryParameter(LON_PARAM, LON)
+                .appendQueryParameter(LAT_PARAM, lat)
+                .appendQueryParameter(LON_PARAM, lon)
                 .appendQueryParameter(LIMIT, NUMBER_OF_OBJECTS)
                 .build()
                 .toString();
