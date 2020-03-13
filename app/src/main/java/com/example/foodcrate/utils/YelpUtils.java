@@ -21,9 +21,9 @@ public class YelpUtils {
     //private final static String API_KEY = "n6jgTLaklmxY6pP38tHCYVfh7uzsuPyaDbCVxov_l0XALUFvv9rogrGCCYKD05m0UqFyQ1g1xuchvW--qNKk-mK_FHDOIAVwEYJkFiFTBwxDho8UvvbXM9CTNwFoXnYx";
     private final static String TERM = "term";
     private final static String PRICE = "price";
+    private final static String OPEN_NOW = "open_now";
     private final static String LAT_PARAM = "latitude";
     private final static String LON_PARAM = "longitude";
-    private final static String OPEN_NOW = "open_now";
 
     private final static String LIMIT = "limit";
     // This is the max :(
@@ -68,13 +68,14 @@ public class YelpUtils {
     }
 
 
-    public static String buildYelpQuery(String term, String lon, String lat, String price_pref) {
+    public static String buildYelpQuery(String term, String lon, String lat, String price_pref, boolean open_now) {
 
         return Uri.parse(BASE_URL).buildUpon()
                 .appendQueryParameter(TERM, term)
                 .appendQueryParameter(LAT_PARAM, lat)
                 .appendQueryParameter(LON_PARAM, lon)
                 .appendQueryParameter(PRICE, price_pref)
+                .appendQueryParameter(OPEN_NOW, String.valueOf(open_now))
                 .appendQueryParameter(LIMIT, NUMBER_OF_OBJECTS)
                 .build()
                 .toString();

@@ -101,13 +101,17 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
             public void onChanged(List<YelpItem> yelpItems) {
                 if (yelpItems != null) {
                     // Get a random item from our list
-                    int max = yelpItems.size() - 1;
-                    int rand = (int) ((Math.random() * ((max - 0) + 1)) + 0);
+                    if (yelpItems.size() > 0) {
+                        int max = yelpItems.size() - 1;
+                        int rand = (int) ((Math.random() * ((max - 0) + 1)) + 0);
 
-                    // quick query for review based on business id?
-
-                    // Launch Activity
-                    startCrateActivity(yelpItems.get(rand));
+                        // Launch Activity
+                        startCrateActivity(yelpItems.get(rand));
+                    } else {
+                        Snackbar.make(findViewById(R.id.nav_host_fragment), "Your Food Crate seems a little light... \nTry expanding your preferences",
+                                Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                        mButton.setVisibility(View.VISIBLE);
+                    }
                 }
             }
         });
@@ -182,10 +186,14 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
                 getString(R.string.pref_price_filter_key),
                 getString(R.string.pref_price_default)
         );
+        boolean open_now = sharedPreferences.getBoolean(
+                getString(R.string.pref_open_now_key),
+                true
+        );
 
-        String url = YelpUtils.buildYelpQuery(query, lon, lat, price_pref);
-        Log.d(TAG, "querying search URL: " + url);
-        mViewModel.loadQueryResults(query, lon, lat, price_pref);
+        /*String url = YelpUtils.buildYelpQuery(query, lon, lat, price_pref);
+        Log.d(TAG, "querying search URL: " + url);*/
+        mViewModel.loadQueryResults(query, lon, lat, price_pref, open_now);
     }
 
     private void startCrateActivity(YelpItem yelpItem ) {

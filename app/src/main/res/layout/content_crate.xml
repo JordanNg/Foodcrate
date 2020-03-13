@@ -197,6 +197,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:layout_marginLeft="16dp"
+                android:textColor="@color/colorPrimary"
                 android:text="Transactions: " />
             <TextView
                 android:id="@+id/tv_crate_transElements"
@@ -207,6 +208,24 @@
                 android:text="Transactions: " />
         </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginLeft="16dp"
+            android:textColor="@color/colorPrimary"
+            android:text="Distance away: "/>
+        <TextView
+            android:id="@+id/tv_distance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="distance in m"/>
+    </LinearLayout>
 
         <RelativeLayout
             android:layout_width="match_parent"

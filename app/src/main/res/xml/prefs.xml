@@ -9,4 +9,10 @@
         android:entryValues="@array/preferred_price_values"
         android:defaultValue="@string/pref_price_default" >
     </ListPreference>
+
+    <CheckBoxPreference
+        android:key="@string/pref_open_now_key"
+        android:title="@string/pref_open_now_title"
+        android:defaultValue="true">
+    </CheckBoxPreference>
 </PreferenceScreen>

@@ -106,4 +106,8 @@
     <string name="pref_price_filter_key">pref_price_filter</string>
     <string name="pref_price_filter_title">Preferred Price</string>
     <string name="pref_price_default">1,2,3,4</string>
+
+    <string name="pref_open_now_key">pref_open_now_key</string>
+    <string name="pref_open_now_title">Open Now</string>
+
 </resources>

@@ -6,8 +6,11 @@ import android.media.Image;
 import android.os.Bundle;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.foodcrate.data.YelpItem;
+import com.example.foodcrate.data.YelpQueryAsyncTask;
+import com.example.foodcrate.data.YelpQueryRepository;
 import com.example.foodcrate.utils.YelpUtils;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -28,6 +31,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import jp.wasabeef.glide.transformations.BlurTransformation;
+
 public class CrateActivity extends AppCompatActivity {
     public static final String EXTRA_YELP_ITEM = "YelpItem";
     private TextView mNameTV;
@@ -37,6 +42,7 @@ public class CrateActivity extends AppCompatActivity {
     private TextView mLocationTV;
     private TextView mTransactionsTV;
     private TextView mTransLabelTV;
+    private TextView mDistance;
 
     private ImageView mPhotoIV;
 
@@ -66,6 +72,7 @@ public class CrateActivity extends AppCompatActivity {
         mPhoneTV = findViewById(R.id.tv_crate_phone);
         mPhotoIV = findViewById(R.id.iv_image_business);
         mLocationTV = findViewById(R.id.tv_crate_location);
+        mDistance = findViewById(R.id.tv_distance);
 
         mTransLabelTV = findViewById(R.id.tv_crate_transactions);
         mTransactionsTV = findViewById(R.id.tv_crate_transElements);
@@ -89,6 +96,8 @@ public class CrateActivity extends AppCompatActivity {
             mPriceTV.setText(business.price);
             mRatingTV.setText(Float.toString(business.rating));
 
+            mDistance.setText(String.format("%.2f", business.distance/1609).concat(" mi"));
+
             mPhoneTV.setText(business.displayPhone);
             mLocationTV.setText(business.address1 + "\n"
                     + business.city + " " + business.state + ", " + business.zipCode);
@@ -99,12 +108,15 @@ public class CrateActivity extends AppCompatActivity {
                 transactions = transactions.concat((business.transactions[0]));
                 for (int i = 1; i < length; i++) {
                     transactions = transactions.concat(", ");
-                    transactions = transactions.concat(business.transactions[i]);
+                    if (business.transactions[i].equals("restaurant_reservation")) {
+                        transactions = transactions.concat("reservations");
+                    } else {
+                        transactions = transactions.concat(business.transactions[i]);
+                    }
                 }
                 mTransactionsTV.setText(transactions);
             } else {
-                mTransactionsTV.setVisibility(View.INVISIBLE);
-                mTransLabelTV.setVisibility(View.INVISIBLE);
+                mTransactionsTV.setText("No Transactions");
             }
 
             /* Switch statement for all of the possible ratings */

@@ -43,15 +43,15 @@
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:padding="8dp"
-            android:hint="Enter a keyword"/>
+            android:hint="Request a crate category.. "/>
 
         <Button
             android:id="@+id/button_query"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="500px"
+            android:layout_height="500px"
             android:layout_gravity="center"
-            android:layout_marginTop="20dp"
-            android:text="Drop Crate"/>
+            android:layout_marginTop="200dp"
+            android:background="@drawable/ic_crateblack"/>
 
         <TextView
             android:id="@+id/tv_yelp_response"
