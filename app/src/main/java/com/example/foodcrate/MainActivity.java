@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
@@ -12,6 +13,7 @@ import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Menu;
 import android.widget.Button;
@@ -27,6 +29,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
 
+import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -37,6 +40,7 @@ import androidx.navigation.ui.NavigationUI;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.preference.PreferenceManager;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -96,7 +100,14 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
             @Override
             public void onChanged(List<YelpItem> yelpItems) {
                 if (yelpItems != null) {
-                    startCrateActivity(yelpItems);
+                    // Get a random item from our list
+                    int max = yelpItems.size() - 1;
+                    int rand = (int) ((Math.random() * ((max - 0) + 1)) + 0);
+
+                    // quick query for review based on business id?
+
+                    // Launch Activity
+                    startCrateActivity(yelpItems.get(rand));
                 }
             }
         });
@@ -165,22 +176,21 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         Log.d("Latitude","status");
     }
 
-
-
     private void executeYelpQuery(String query, String lon, String lat) {
-        String url = YelpUtils.buildYelpQuery(query, lon, lat);
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        String price_pref = sharedPreferences.getString(
+                getString(R.string.pref_price_filter_key),
+                getString(R.string.pref_price_default)
+        );
+
+        String url = YelpUtils.buildYelpQuery(query, lon, lat, price_pref);
         Log.d(TAG, "querying search URL: " + url);
-        mViewModel.loadQueryResults(query, lon, lat);
-        //new YelpQueryAsyncTask().execute(url);
+        mViewModel.loadQueryResults(query, lon, lat, price_pref);
     }
 
-    private void startCrateActivity(List<YelpItem> yelpItems) {
-        // Get a random item from our list
-        int max = yelpItems.size() - 1;
-        int rand = (int) ((Math.random() * ((max - 0) + 1)) + 0);
-
+    private void startCrateActivity(YelpItem yelpItem ) {
         Intent crateActivityIntent = new Intent(MainActivity.this, CrateActivity.class);
-        crateActivityIntent.putExtra(CrateActivity.EXTRA_YELP_ITEM, yelpItems.get(rand));
+        crateActivityIntent.putExtra(CrateActivity.EXTRA_YELP_ITEM, yelpItem);
         startActivity(crateActivityIntent);
     }
 
@@ -192,49 +202,21 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     }
 
     @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+                Intent intent = new Intent(this, SettingsActivity.class);
+                startActivity(intent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
     public boolean onSupportNavigateUp() {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
-    }
-
-    public class YelpQueryAsyncTask extends AsyncTask<String, Void, String> {
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            mLoadingIndicatorPB.setVisibility(View.VISIBLE);
-        }
-
-        @Override
-        protected String doInBackground(String... strings) {
-            String url = strings[0];
-            String searchResults = null;
-            try {
-                searchResults = NetworkUtils.doHttpGet(url);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return searchResults;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
-            mLoadingIndicatorPB.setVisibility(View.INVISIBLE);
-            List<YelpItem> yelpItems = null;
-            if (s != null) {
-                yelpItems = YelpUtils.parseYelpQueryResults(s);
-            }
-
-            // Get a random item from our list
-            int max = yelpItems.size() - 1;
-            int rand = (int) ((Math.random() * ((max - 0) + 1)) + 0);
-
-            //mBusinessId = yelpItems.get(rand).id;
-            Intent crateActivityIntent = new Intent(MainActivity.this, CrateActivity.class);
-            crateActivityIntent.putExtra(CrateActivity.EXTRA_YELP_ITEM, yelpItems.get(rand));
-            startActivity(crateActivityIntent);
-        }
     }
 }

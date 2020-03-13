@@ -102,4 +102,8 @@
         "For example, position the FAB to one side of stream of a cards so the FAB won’t interfere "
         "when a user tries to pick up one of cards.\n\n"
     </string>
+    
+    <string name="pref_price_filter_key">pref_price_filter</string>
+    <string name="pref_price_filter_title">Preferred Price</string>
+    <string name="pref_price_default">1,2,3,4</string>
 </resources>

@@ -44,15 +44,5 @@ public class YelpQueryAsyncTask extends AsyncTask <String, Void, String> {
         }
 
         mCallback.onQueryFinished(yelpItems);
-
-        /*
-        // Get a random item from our list
-        int max = yelpItems.size() - 1;
-        int rand = (int) ((Math.random() * ((max - 0) + 1)) + 0);
-
-        Intent crateActivityIntent = new Intent(MainActivity.this, CrateActivity.class);
-        crateActivityIntent.putExtra(CrateActivity.EXTRA_YELP_ITEM, yelpItems.get(rand));
-        startActivity(crateActivityIntent);
-        */
     }
 }

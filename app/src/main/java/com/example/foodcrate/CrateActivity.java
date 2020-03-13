@@ -9,11 +9,19 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.foodcrate.data.YelpItem;
 import com.example.foodcrate.utils.YelpUtils;
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.FragmentActivity;
 
 import android.util.Log;
 import android.view.View;
@@ -43,6 +51,7 @@ public class CrateActivity extends AppCompatActivity {
     private ImageView mFourhStar;
     private ImageView mFivehStar;
 
+    private GoogleMap mMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -152,6 +161,7 @@ public class CrateActivity extends AppCompatActivity {
                     mFiveStar.setVisibility(View.VISIBLE);
                     break;
                 default:
+                    break;
             }
 
             /* Insert the business Yelp image into the Image View */
@@ -165,8 +175,8 @@ public class CrateActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                /*Snackbar.make(view, "Share this place with a friend!", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();*/
 
                 Intent intent = getIntent();
                 YelpItem business = (YelpItem) intent.getSerializableExtra(EXTRA_YELP_ITEM);

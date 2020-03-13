@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <ListPreference
+        android:key="@string/pref_price_filter_key"
+        android:title="@string/pref_price_filter_title"
+        android:summary="%s"
+        android:dialogTitle="@string/pref_price_filter_title"
+        android:entries="@array/preferred_price_entries"
+        android:entryValues="@array/preferred_price_values"
+        android:defaultValue="@string/pref_price_default" >
+    </ListPreference>
+</PreferenceScreen>

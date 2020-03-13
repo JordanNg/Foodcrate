@@ -68,12 +68,13 @@ public class YelpUtils {
     }
 
 
-    public static String buildYelpQuery(String term, String lon, String lat) {
+    public static String buildYelpQuery(String term, String lon, String lat, String price_pref) {
 
         return Uri.parse(BASE_URL).buildUpon()
                 .appendQueryParameter(TERM, term)
                 .appendQueryParameter(LAT_PARAM, lat)
                 .appendQueryParameter(LON_PARAM, lon)
+                .appendQueryParameter(PRICE, price_pref)
                 .appendQueryParameter(LIMIT, NUMBER_OF_OBJECTS)
                 .build()
                 .toString();
