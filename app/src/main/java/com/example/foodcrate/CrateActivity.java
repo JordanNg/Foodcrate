@@ -3,6 +3,7 @@ package com.example.foodcrate;
 import android.app.ActionBar;
 import android.content.Intent;
 import android.media.Image;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -12,6 +13,8 @@ import com.bumptech.glide.request.RequestOptions;
 import com.example.foodcrate.data.YelpItem;
 import com.example.foodcrate.data.YelpQueryAsyncTask;
 import com.example.foodcrate.data.YelpQueryRepository;
+import com.example.foodcrate.data.YelpReviewItem;
+import com.example.foodcrate.utils.NetworkUtils;
 import com.example.foodcrate.utils.YelpUtils;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -34,6 +37,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import java.io.IOException;
+import java.util.List;
 
 import jp.wasabeef.glide.transformations.BlurTransformation;
 
@@ -72,6 +78,19 @@ public class CrateActivity extends AppCompatActivity {
     private ImageView mThreehStar;
     private ImageView mFourhStar;
     private ImageView mFivehStar;
+
+    private ImageView mReviewIV1;
+    private ImageView mReviewIV2;
+    private ImageView mReviewIV3;
+    private TextView mReviewNameTV1;
+    private TextView mReviewNameTV2;
+    private TextView mReviewNameTV3;
+    private TextView mReviewTextTV1;
+    private TextView mReviewTextTV2;
+    private TextView mReviewTextTV3;
+    private TextView mReviewRatingTV1;
+    private TextView mReviewRatingTV2;
+    private TextView mReviewRatingTV3;
 
     private GoogleMap mMap;
 
@@ -113,6 +132,20 @@ public class CrateActivity extends AppCompatActivity {
         mThreehStar = findViewById(R.id.iv_threeh_star);
         mFourhStar = findViewById(R.id.iv_fourh_star);
         mFivehStar = findViewById(R.id.iv_fiveh_star);
+
+        // Review stuff
+        mReviewIV1 = findViewById(R.id.iv_review_1);
+        mReviewIV2 = findViewById(R.id.iv_review_2);
+        mReviewIV3 = findViewById(R.id.iv_review_3);
+        mReviewNameTV1 = findViewById(R.id.tv_name_1);
+        mReviewNameTV2 = findViewById(R.id.tv_name_2);
+        mReviewNameTV3 = findViewById(R.id.tv_name_3);
+        mReviewTextTV1 = findViewById(R.id.tv_review_1);
+        mReviewTextTV2 = findViewById(R.id.tv_review_2);
+        mReviewTextTV3 = findViewById(R.id.tv_review_3);
+        mReviewRatingTV1 = findViewById(R.id.tv_rating_1);
+        mReviewRatingTV2 = findViewById(R.id.tv_rating_2);
+        mReviewRatingTV3 = findViewById(R.id.tv_rating_3);
 
         Intent intent = getIntent();
         if (intent != null && intent.hasExtra(EXTRA_YELP_ITEM)) {
@@ -195,7 +228,7 @@ public class CrateActivity extends AppCompatActivity {
             /* Insert the business Yelp image into the Image View */
             Glide.with(mPhotoIV)
                     .load(business.imageUrl)
-                    .apply(new RequestOptions().override(500,500).centerCrop())
+                    .apply(new RequestOptions().override(600,600).centerCrop())
                     .into(mPhotoIV);
 
             mAddToDatabaseButton.setOnClickListener(new View.OnClickListener() {
@@ -213,6 +246,10 @@ public class CrateActivity extends AppCompatActivity {
                     }
                 }
             });
+
+            // Execute a search for reviews
+            executeYelpReviewQuery(business.id);
+
         }
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -237,5 +274,61 @@ public class CrateActivity extends AppCompatActivity {
                 startActivity(chooserIntent);
             }
         });
+    }
+
+    private void executeYelpReviewQuery(String id) {
+        String url = YelpUtils.buildYelpReviewQuery(id);
+        new YelpReviewTask().execute(url);
+    }
+
+    public class YelpReviewTask extends AsyncTask<String, Void, String> {
+        @Override
+        protected String doInBackground(String... strings) {
+            String url = strings[0];
+            String results = null;
+            try {
+                results = NetworkUtils.doHttpGet(url);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return results;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            List<YelpReviewItem> yelpReviewItems = null;
+            if (s != null) {
+                yelpReviewItems = YelpUtils.parseYelpReviewResults(s);
+            }
+
+            // Using the 3 items update the UI
+            Glide.with(mReviewIV1)
+                    .load(yelpReviewItems.get(0).image_url)
+                    .apply(new RequestOptions().override(500,500).centerCrop())
+                    .apply(RequestOptions.circleCropTransform())
+                    .into(mReviewIV1);
+            mReviewNameTV1.setText(yelpReviewItems.get(0).name);
+            mReviewTextTV1.setText(yelpReviewItems.get(0).text);
+            mReviewRatingTV1.setText("Rating: " + yelpReviewItems.get(0).rating);
+
+            Glide.with(mReviewIV2)
+                    .load(yelpReviewItems.get(1).image_url)
+                    .apply(new RequestOptions().override(500,500).centerCrop())
+                    .apply(RequestOptions.circleCropTransform())
+                    .into(mReviewIV2);
+            mReviewNameTV2.setText(yelpReviewItems.get(1).name);
+            mReviewTextTV2.setText(yelpReviewItems.get(1).text);
+            mReviewRatingTV2.setText("Rating: " + yelpReviewItems.get(1).rating);
+
+            Glide.with(mReviewIV3)
+                    .load(yelpReviewItems.get(2).image_url)
+                    .apply(new RequestOptions().override(500,500).centerCrop())
+                    .apply(RequestOptions.circleCropTransform())
+                    .into(mReviewIV3);
+            mReviewNameTV3.setText(yelpReviewItems.get(2).name);
+            mReviewTextTV3.setText(yelpReviewItems.get(2).text);
+            mReviewRatingTV3.setText("Rating: " + yelpReviewItems.get(2).rating);
+        }
     }
 }

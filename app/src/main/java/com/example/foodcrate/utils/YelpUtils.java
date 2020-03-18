@@ -9,6 +9,7 @@ import android.util.Log;
 
 import com.example.foodcrate.MainActivity;
 import com.example.foodcrate.data.YelpItem;
+import com.example.foodcrate.data.YelpReviewItem;
 import com.google.gson.Gson;
 
 import java.net.URI;
@@ -67,6 +68,24 @@ public class YelpUtils {
         public String state;
     }
 
+    static class YelpReviewResults {
+        public YelpReviewListItem[] reviews;
+    }
+
+    static class YelpReviewListItem {
+        public String id;
+        public int rating;
+        public YelpUserData user;
+        public String text;
+        public String time_created;
+    }
+
+    static class YelpUserData{
+        public String name;
+        public String image_url;
+        public String profile_url;
+        public String id;
+    }
 
     public static String buildYelpQuery(String term, String lon, String lat, String price_pref, boolean open_now) {
 
@@ -82,11 +101,7 @@ public class YelpUtils {
     }
 
     public static String buildYelpReviewQuery(String id) {
-
-        return Uri.parse(REVIEW_URL).buildUpon()
-                .appendPath(id)
-                .build()
-                .toString();
+        return REVIEW_URL + id + "/reviews";
     }
 
     public static ArrayList<YelpItem> parseYelpQueryResults(String yelpJSON) {
@@ -145,6 +160,33 @@ public class YelpUtils {
             }
 
             return yelpItems;
+        } else {
+            return null;
+        }
+    }
+
+    public static ArrayList<YelpReviewItem> parseYelpReviewResults (String yelpJSON) {
+        Gson gson = new Gson();
+        YelpReviewResults results = gson.fromJson(yelpJSON, YelpReviewResults.class);
+        if (results != null && results.reviews != null) {
+            ArrayList<YelpReviewItem> yelpReviewItems = new ArrayList<>();
+
+            for (YelpReviewListItem listItem : results.reviews) {
+                YelpReviewItem yelpReviewItem = new YelpReviewItem();
+
+                yelpReviewItem.id = listItem.id;
+                yelpReviewItem.rating = Integer.toString(listItem.rating);
+                yelpReviewItem.text = listItem.text;
+                yelpReviewItem.time_created = listItem.time_created;
+                yelpReviewItem.name = listItem.user.name;
+                yelpReviewItem.image_url = listItem.user.image_url;
+                yelpReviewItem.profile_url = listItem.user.profile_url;
+                yelpReviewItem.userId = listItem.user.id;
+
+                yelpReviewItems.add(yelpReviewItem);
+            }
+
+            return yelpReviewItems;
         } else {
             return null;
         }
