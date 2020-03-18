@@ -41,12 +41,13 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.preference.PreferenceManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements LocationListener {
+public class MainActivity extends AppCompatActivity implements LocationListener, NavigationView.OnNavigationItemSelectedListener {
     private static final String TAG = MainActivity.class.getSimpleName();
 
     private EditText mSearchTV;
@@ -61,6 +62,8 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     private static final int REQUEST_LOCATION = 123;
     private LocationManager locationManager;
     private LocationListener locationListener;
+
+    private DrawerLayout mDrawer;
 
     private List<YelpItem> mYelpItems;
 
@@ -80,17 +83,20 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
                         .setAction("Action", null).show();
             }
         });
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        mDrawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow)
-                .setDrawerLayout(drawer)
+                .setDrawerLayout(mDrawer)
                 .build();
+
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
-        NavigationUI.setupWithNavController(navigationView, navController);
+        //NavigationUI.setupWithNavController(navigationView, navController);
 
         mButton = findViewById(R.id.button_query);
         mLoadingIndicatorPB = findViewById(R.id.pb_loading_indicator);
@@ -226,5 +232,24 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        mDrawer.closeDrawers();
+        switch (item.getItemId()) {
+            case R.id.nav_home:
+                return true;
+            case R.id.nav_gallery:
+                Intent visitedIntent = new Intent(this, VisitedActivity.class);
+                startActivity(visitedIntent);
+                return true;
+            case R.id.nav_slideshow:
+                Intent intent = new Intent(this, SettingsActivity.class);
+                startActivity(intent);
+                return true;
+            default:
+                return false;
+        }
     }
 }

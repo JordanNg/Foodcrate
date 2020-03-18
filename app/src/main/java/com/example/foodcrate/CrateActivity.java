@@ -3,6 +3,7 @@ package com.example.foodcrate;
 import android.app.ActionBar;
 import android.content.Intent;
 import android.media.Image;
+import android.os.Build;
 import android.os.Bundle;
 
 import com.bumptech.glide.Glide;
@@ -22,19 +23,29 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentActivity;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import jp.wasabeef.glide.transformations.BlurTransformation;
 
+import static com.example.foodcrate.R.color.colorAccent;
+import static com.example.foodcrate.R.color.colorClosed;
+import static com.example.foodcrate.R.color.colorPrimary;
+
 public class CrateActivity extends AppCompatActivity {
     public static final String EXTRA_YELP_ITEM = "YelpItem";
+
+    private YelpItem business;
+
     private TextView mNameTV;
     private TextView mPriceTV;
     private TextView mRatingTV;
@@ -43,6 +54,11 @@ public class CrateActivity extends AppCompatActivity {
     private TextView mTransactionsTV;
     private TextView mTransLabelTV;
     private TextView mDistance;
+
+    private Button mAddToDatabaseButton;
+    private boolean mIsSaved = false;
+
+    private SavedYelpItemsViewModel mViewModel;
 
     private ImageView mPhotoIV;
 
@@ -66,6 +82,13 @@ public class CrateActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        mViewModel = new ViewModelProvider(
+                this,
+                new ViewModelProvider.AndroidViewModelFactory(
+                        getApplication()
+                )
+        ).get(SavedYelpItemsViewModel.class);
+
         mNameTV = findViewById(R.id.tv_crate_name);
         mPriceTV = findViewById(R.id.tv_crate_price);
         mRatingTV = findViewById(R.id.tv_crate_rating);
@@ -76,6 +99,8 @@ public class CrateActivity extends AppCompatActivity {
 
         mTransLabelTV = findViewById(R.id.tv_crate_transactions);
         mTransactionsTV = findViewById(R.id.tv_crate_transElements);
+
+        mAddToDatabaseButton = findViewById(R.id.button_add_to_database);
 
         /* Grab references to each of the stars */
         mOneStar = findViewById(R.id.iv_one_star);
@@ -91,7 +116,8 @@ public class CrateActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         if (intent != null && intent.hasExtra(EXTRA_YELP_ITEM)) {
-            YelpItem business = (YelpItem) intent.getSerializableExtra(EXTRA_YELP_ITEM);
+            business = (YelpItem) intent.getSerializableExtra(EXTRA_YELP_ITEM);
+
             mNameTV.setText(business.name);
             mPriceTV.setText(business.price);
             mRatingTV.setText(Float.toString(business.rating));
@@ -102,21 +128,11 @@ public class CrateActivity extends AppCompatActivity {
             mLocationTV.setText(business.address1 + "\n"
                     + business.city + " " + business.state + ", " + business.zipCode);
 
-            int length = business.transactions.length;
-            if (length != 0) {
-                String transactions = "";
-                transactions = transactions.concat((business.transactions[0]));
-                for (int i = 1; i < length; i++) {
-                    transactions = transactions.concat(", ");
-                    if (business.transactions[i].equals("restaurant_reservation")) {
-                        transactions = transactions.concat("reservations");
-                    } else {
-                        transactions = transactions.concat(business.transactions[i]);
-                    }
-                }
-                mTransactionsTV.setText(transactions);
+            // Must do it this way for database...
+            if (business.transactions != null) {
+                mTransactionsTV.setText(business.transactions);
             } else {
-                mTransactionsTV.setText("No Transactions");
+                mTransactionsTV.setText("No transactions listed");
             }
 
             /* Switch statement for all of the possible ratings */
@@ -181,6 +197,22 @@ public class CrateActivity extends AppCompatActivity {
                     .load(business.imageUrl)
                     .apply(new RequestOptions().override(500,500).centerCrop())
                     .into(mPhotoIV);
+
+            mAddToDatabaseButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mIsSaved = !mIsSaved;
+                    if (mIsSaved) {
+                        mAddToDatabaseButton.setBackgroundColor(getResources().getColor(colorClosed));
+                        mAddToDatabaseButton.setText("Remove from visited");
+                        mViewModel.insertYelpItem(business);
+                    } else {
+                        mAddToDatabaseButton.setBackgroundColor(getResources().getColor(colorAccent));
+                        mAddToDatabaseButton.setText("Add to visited");
+                        mViewModel.deleteYelpItem(business);
+                    }
+                }
+            });
         }
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);

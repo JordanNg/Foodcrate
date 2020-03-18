@@ -146,6 +146,16 @@
                         android:textSize="20dp"
                         android:text="Price:" />
                 </LinearLayout>
+
+                <Button
+                    android:id="@+id/button_add_to_database"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginTop="6dp"
+                    android:background="@color/colorAccent"
+                    android:text="Add to visited"/>
             </LinearLayout>
         </LinearLayout>
 

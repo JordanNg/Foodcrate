@@ -1,9 +1,17 @@
 package com.example.foodcrate.data;
 
+import androidx.annotation.NonNull;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
 import java.io.Serializable;
 
+@Entity(tableName = "yelpTable")
 public class YelpItem implements Serializable {
     public String name;
+
+    @PrimaryKey
+    @NonNull
     public String id;
     public int reviewCount;
     public boolean isClosed;
@@ -15,7 +23,7 @@ public class YelpItem implements Serializable {
     public String phone;
     public String displayPhone;
 
-    public String[] transactions;
+    public String transactions;
 
     public float latitude;
     public float longitude;

@@ -115,7 +115,18 @@ public class YelpUtils {
                 yelpItem.phone = listItem.phone;
                 yelpItem.displayPhone = listItem.display_phone;
 
-                yelpItem.transactions = listItem.transactions;
+                // Have to convert the transactions to one string
+                String str = "";
+                String strSeparator = ", ";
+                for (int i = 0;i<listItem.transactions.length; i++) {
+                    str = str+listItem.transactions[i];
+                    // Do not append comma at the end of last element
+                    if(i<listItem.transactions.length-1){
+                        str = str+strSeparator;
+                    }
+                }
+
+                yelpItem.transactions = str;
 
                 yelpItem.longitude = listItem.coordinates.longitude;
                 yelpItem.latitude = listItem.coordinates.latitude;
