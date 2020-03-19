@@ -28,7 +28,7 @@
             android:layout_width="72dp"
             android:layout_height="72dp"
             android:layout_gravity="top|center_horizontal"
-            android:layout_marginTop="140dp"
+            android:layout_marginTop="320dp"
             android:visibility="invisible">
         </ProgressBar>
     </LinearLayout>
@@ -43,7 +43,7 @@
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:padding="8dp"
-            android:hint="Request a crate category.. "/>
+            android:hint="Enter a keyword to adjust your crate..."/>
 
         <Button
             android:id="@+id/button_query"

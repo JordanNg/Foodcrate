@@ -134,6 +134,9 @@ public class YelpUtils {
                 String str = "";
                 String strSeparator = ", ";
                 for (int i = 0;i<listItem.transactions.length; i++) {
+                    if (listItem.transactions[i].equals("restaurant_reservation")) {
+                        listItem.transactions[i] = "restaurant reservation";
+                    }
                     str = str+listItem.transactions[i];
                     // Do not append comma at the end of last element
                     if(i<listItem.transactions.length-1){

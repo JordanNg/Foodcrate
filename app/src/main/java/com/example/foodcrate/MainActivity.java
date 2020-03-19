@@ -18,9 +18,12 @@ import android.view.View;
 import android.view.Menu;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.foodcrate.data.Status;
 import com.example.foodcrate.data.YelpItem;
 import com.example.foodcrate.utils.NetworkUtils;
