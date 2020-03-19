@@ -1,8 +1,10 @@
 package com.example.foodcrate;
 
-import android.app.ActionBar;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.media.Image;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -26,19 +28,24 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.io.IOException;
+import java.net.URI;
 import java.util.List;
 
 import jp.wasabeef.glide.transformations.BlurTransformation;
@@ -100,6 +107,10 @@ public class CrateActivity extends AppCompatActivity {
         setContentView(R.layout.activity_crate);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        //actionBar.setHomeAsUpIndicator(R.drawable.);
 
         mViewModel = new ViewModelProvider(
                 this,
@@ -279,6 +290,40 @@ public class CrateActivity extends AppCompatActivity {
     private void executeYelpReviewQuery(String id) {
         String url = YelpUtils.buildYelpReviewQuery(id);
         new YelpReviewTask().execute(url);
+    }
+
+    public void viewOnWeb() {
+        if (business != null) {
+            Uri yelpURL = Uri.parse(business.url);
+            Intent webIntent = new Intent(Intent.ACTION_VIEW, yelpURL);
+            PackageManager packageManager = getPackageManager();
+            List<ResolveInfo> activities =
+                    packageManager.queryIntentActivities(
+                            webIntent,
+                            PackageManager.MATCH_DEFAULT_ONLY
+                    );
+            if (activities.size() > 0) {
+                startActivity(webIntent);
+            }
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_crate, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_view_on_web:
+                viewOnWeb();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+
     }
 
     public class YelpReviewTask extends AsyncTask<String, Void, String> {

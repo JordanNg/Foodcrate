@@ -53,6 +53,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
     private EditText mSearchTV;
     private ProgressBar mLoadingIndicatorPB;
     private Button mButton;
+    private TextView mUnpackCrate;
 
     private YelpQueryViewModel mViewModel;
 
@@ -99,6 +100,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         //NavigationUI.setupWithNavController(navigationView, navController);
 
         mButton = findViewById(R.id.button_query);
+        mUnpackCrate = findViewById(R.id.tv_unpack_crate);
         mLoadingIndicatorPB = findViewById(R.id.pb_loading_indicator);
 
         mViewModel = new ViewModelProvider(this).get(YelpQueryViewModel.class);
@@ -152,6 +154,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
             @Override
             public void onClick(View v) {
                 mButton.setVisibility(View.INVISIBLE);
+                mUnpackCrate.setVisibility(View.INVISIBLE);
                 mSearchTV = findViewById(R.id.et_keyword_search);
                 String sample = String.valueOf(mSearchTV.getText());
                 executeYelpQuery(sample, lon, lat);
@@ -163,6 +166,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
     protected void onResume() {
         super.onResume();
         mButton.setVisibility(View.VISIBLE);
+        mUnpackCrate.setVisibility(View.VISIBLE);
     }
 
     @Override

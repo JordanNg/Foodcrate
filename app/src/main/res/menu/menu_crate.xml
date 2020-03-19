@@ -8,4 +8,10 @@
         android:title="@string/action_settings"
         app:showAsAction="ifRoom"
         android:icon="@drawable/ic_settings_black_24dp"/>
+    <item
+        android:id="@+id/action_view_on_web"
+        android:orderInCategory="99"
+        android:title="View On Web"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/ic_public_white_24dp"/>
 </menu>
