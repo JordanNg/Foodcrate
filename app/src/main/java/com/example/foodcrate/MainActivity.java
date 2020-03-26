@@ -203,10 +203,14 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
                 getString(R.string.pref_open_now_key),
                 true
         );
+        boolean deals = sharedPreferences.getBoolean(
+                getString(R.string.pref_deals_key),
+                false
+        );
 
         /*String url = YelpUtils.buildYelpQuery(query, lon, lat, price_pref);
         Log.d(TAG, "querying search URL: " + url);*/
-        mViewModel.loadQueryResults(query, lon, lat, price_pref, open_now);
+        mViewModel.loadQueryResults(query, lon, lat, price_pref, open_now, deals);
     }
 
     private void startCrateActivity(YelpItem yelpItem ) {

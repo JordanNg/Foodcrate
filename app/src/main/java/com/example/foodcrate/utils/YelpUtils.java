@@ -23,6 +23,9 @@ public class YelpUtils {
     private final static String TERM = "term";
     private final static String PRICE = "price";
     private final static String OPEN_NOW = "open_now";
+    private final static String ATTRIBUTES = "attributes";
+    private final static String DEALS = "deals";
+    private final static String GENDER_NEUTRAL = "gender_neutral_restrooms";
     private final static String LAT_PARAM = "latitude";
     private final static String LON_PARAM = "longitude";
 
@@ -87,17 +90,21 @@ public class YelpUtils {
         public String id;
     }
 
-    public static String buildYelpQuery(String term, String lon, String lat, String price_pref, boolean open_now) {
+    public static String buildYelpQuery(String term, String lon, String lat, String price_pref, boolean open_now, boolean deals) {
 
-        return Uri.parse(BASE_URL).buildUpon()
+        Uri.Builder url = Uri.parse(BASE_URL).buildUpon()
                 .appendQueryParameter(TERM, term)
                 .appendQueryParameter(LAT_PARAM, lat)
                 .appendQueryParameter(LON_PARAM, lon)
                 .appendQueryParameter(PRICE, price_pref)
                 .appendQueryParameter(OPEN_NOW, String.valueOf(open_now))
-                .appendQueryParameter(LIMIT, NUMBER_OF_OBJECTS)
-                .build()
-                .toString();
+                .appendQueryParameter(LIMIT, NUMBER_OF_OBJECTS);
+
+        // If the user wants to search for deals then append deals
+        if (deals) {
+            url.appendQueryParameter(ATTRIBUTES, DEALS);
+        }
+        return url.build().toString();
     }
 
     public static String buildYelpReviewQuery(String id) {

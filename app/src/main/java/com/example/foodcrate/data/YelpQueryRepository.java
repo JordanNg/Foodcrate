@@ -41,9 +41,9 @@ public class YelpQueryRepository implements YelpQueryAsyncTask.Callback{
         }
     }
 
-    public void loadQueryResults(String query, String lon, String lat, String price, boolean open_now) {
+    public void loadQueryResults(String query, String lon, String lat, String price, boolean open_now, boolean deals) {
         mYelpQueryResults.setValue(null);
-        String url = YelpUtils.buildYelpQuery(query, lon, lat, price, open_now);
+        String url = YelpUtils.buildYelpQuery(query, lon, lat, price, open_now, deals);
         Log.d("Executing Query: ", url);
         mLoadingStatus.setValue(Status.LOADING);
         new YelpQueryAsyncTask(this).execute(url);

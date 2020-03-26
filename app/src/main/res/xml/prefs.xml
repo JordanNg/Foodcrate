@@ -15,4 +15,10 @@
         android:title="@string/pref_open_now_title"
         android:defaultValue="true">
     </CheckBoxPreference>
+
+    <CheckBoxPreference
+        android:key="@string/pref_deals_key"
+        android:title="@string/pref_deals_title"
+        android:defaultValue="false">
+    </CheckBoxPreference>
 </PreferenceScreen>

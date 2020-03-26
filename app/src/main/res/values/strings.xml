@@ -110,6 +110,7 @@
     <string name="pref_open_now_key">pref_open_now_key</string>
     <string name="pref_open_now_title">Open Now</string>
 
-    
+    <string name="pref_deals_key">pref_deals_key</string>
+    <string name="pref_deals_title">Deals</string>
 
 </resources>

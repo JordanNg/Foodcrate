@@ -21,8 +21,8 @@ public class YelpQueryViewModel extends ViewModel {
         mLoadingStatus = mRepository.getLoadingStatus();
     }
 
-    public void loadQueryResults(String query, String lon, String lat, String price, boolean open_now) {
-        mRepository.loadQueryResults(query, lon, lat, price, open_now);
+    public void loadQueryResults(String query, String lon, String lat, String price, boolean open_now, boolean deals) {
+        mRepository.loadQueryResults(query, lon, lat, price, open_now, deals);
     }
 
     public LiveData<List<YelpItem>> getQueryResults() {
