@@ -92,8 +92,10 @@ public class YelpUtils {
 
     public static String buildYelpQuery(String term, String lon, String lat, String price_pref, boolean open_now, boolean deals) {
 
+
+
         Uri.Builder url = Uri.parse(BASE_URL).buildUpon()
-                .appendQueryParameter(TERM, term)
+                .appendQueryParameter(TERM, term + "+food")
                 .appendQueryParameter(LAT_PARAM, lat)
                 .appendQueryParameter(LON_PARAM, lon)
                 .appendQueryParameter(PRICE, price_pref)
@@ -104,6 +106,7 @@ public class YelpUtils {
         if (deals) {
             url.appendQueryParameter(ATTRIBUTES, DEALS);
         }
+
         return url.build().toString();
     }
 
