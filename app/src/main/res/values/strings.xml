@@ -104,13 +104,18 @@
     </string>
 
     <string name="pref_price_filter_key">pref_price_filter</string>
-    <string name="pref_price_filter_title">Preferred Price</string>
+    <string name="pref_price_filter_title">Price</string>
+    <string name="pref_price_filter_header">Preferred Price</string>
     <string name="pref_price_default">1,2,3,4</string>
 
     <string name="pref_open_now_key">pref_open_now_key</string>
+    <string name="pref_open_now_header">Currently Open</string>
+    <string name="pref_open_summary">Crates only include currently open businesses</string>
     <string name="pref_open_now_title">Open Now</string>
 
     <string name="pref_deals_key">pref_deals_key</string>
+    <string name="pref_deals_header">Advertising Deals</string>
+    <string name="pref_deals_summary">Crates only include businesses advertising deals</string>
     <string name="pref_deals_title">Deals</string>
 
 </resources>

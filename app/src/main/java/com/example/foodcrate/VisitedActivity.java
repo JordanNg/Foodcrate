@@ -41,4 +41,5 @@ public class VisitedActivity extends AppCompatActivity {
             }
         });
     }
+
 }

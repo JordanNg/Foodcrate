@@ -1,24 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <ListPreference
-        android:key="@string/pref_price_filter_key"
-        android:title="@string/pref_price_filter_title"
-        android:summary="%s"
-        android:dialogTitle="@string/pref_price_filter_title"
-        android:entries="@array/preferred_price_entries"
-        android:entryValues="@array/preferred_price_values"
-        android:defaultValue="@string/pref_price_default" >
-    </ListPreference>
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <PreferenceCategory
+        android:title="@string/pref_price_filter_header"
+        app:iconSpaceReserved="false">
+        <ListPreference
+            android:key="@string/pref_price_filter_key"
+            android:title="@string/pref_price_filter_title"
+            android:summary="%s"
+            android:dialogTitle="@string/pref_price_filter_title"
+            android:entries="@array/preferred_price_entries"
+            android:entryValues="@array/preferred_price_values"
+            android:defaultValue="@string/pref_price_default"
+            app:iconSpaceReserved="false">
+        </ListPreference>
+    </PreferenceCategory>
 
-    <CheckBoxPreference
-        android:key="@string/pref_open_now_key"
-        android:title="@string/pref_open_now_title"
-        android:defaultValue="true">
-    </CheckBoxPreference>
+    <PreferenceCategory
+        android:title="@string/pref_open_now_header"
+        app:iconSpaceReserved="false">
+        <SwitchPreference
+            android:key="@string/pref_open_now_key"
+            android:title="@string/pref_open_now_title"
+            android:summary="@string/pref_open_summary"
+            android:defaultValue="true"
+            app:iconSpaceReserved="false">
+        </SwitchPreference>
+    </PreferenceCategory>
 
-    <CheckBoxPreference
-        android:key="@string/pref_deals_key"
-        android:title="@string/pref_deals_title"
-        android:defaultValue="false">
-    </CheckBoxPreference>
+    <PreferenceCategory
+        android:title="@string/pref_deals_header"
+        app:iconSpaceReserved="false">
+        <SwitchPreference
+            android:key="@string/pref_deals_key"
+            android:title="@string/pref_deals_title"
+            android:summary="@string/pref_deals_summary"
+            android:defaultValue="false"
+            app:iconSpaceReserved="false">
+        </SwitchPreference>
+    </PreferenceCategory>
+
 </PreferenceScreen>
