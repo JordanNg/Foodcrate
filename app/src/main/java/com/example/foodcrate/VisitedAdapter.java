@@ -54,17 +54,23 @@ public class VisitedAdapter extends RecyclerView.Adapter<VisitedAdapter.visitedV
         private ImageView mYelpItemIV;
         private TextView mYelpItemNameTV;
         private TextView mYelpItemPriceTV;
+        private TextView mYelpItemRatingTV;
+        private TextView mYelpItemVisitedDateTV;
 
         public visitedViewHolder(@NonNull View itemView) {
             super(itemView);
             mYelpItemNameTV = itemView.findViewById(R.id.tv_business_name);
             mYelpItemPriceTV = itemView.findViewById(R.id.tv_business_price);
             mYelpItemIV = itemView.findViewById(R.id.iv_visited_image);
+            mYelpItemRatingTV = itemView.findViewById(R.id.tv_business_rating);
+            mYelpItemVisitedDateTV = itemView.findViewById(R.id.tv_business_date_visited);
         }
 
         void bind(YelpItem yelpItem) {
             mYelpItemNameTV.setText(yelpItem.name);
             mYelpItemPriceTV.setText(yelpItem.price);
+            mYelpItemRatingTV.setText(String.valueOf(yelpItem.rating));
+            mYelpItemVisitedDateTV.setText(yelpItem.date);
             /* Insert the business Yelp image into the Image View */
             Glide.with(mYelpItemIV)
                     .load(yelpItem.imageUrl)

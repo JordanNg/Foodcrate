@@ -5,6 +5,7 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 import java.io.Serializable;
+import java.util.Date;
 
 @Entity(tableName = "yelpTable")
 public class YelpItem implements Serializable {
@@ -37,4 +38,6 @@ public class YelpItem implements Serializable {
     public String country;
 
     public float distance;
+
+    public String date;
 }

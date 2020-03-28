@@ -46,6 +46,8 @@ import android.widget.TextView;
 
 import java.io.IOException;
 import java.net.URI;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
 
 import jp.wasabeef.glide.transformations.BlurTransformation;
@@ -249,6 +251,9 @@ public class CrateActivity extends AppCompatActivity {
                     if (mIsSaved) {
                         mAddToDatabaseButton.setBackgroundColor(getResources().getColor(colorClosed));
                         mAddToDatabaseButton.setText("Remove from visited");
+                        Calendar calendar = Calendar.getInstance();
+                        SimpleDateFormat format = new SimpleDateFormat("EEEE, MMMM d, yyyy 'at' h:mm a");
+                        business.date = format.format(calendar.getTime());
                         mViewModel.insertYelpItem(business);
                     } else {
                         mAddToDatabaseButton.setBackgroundColor(getResources().getColor(colorAccent));
